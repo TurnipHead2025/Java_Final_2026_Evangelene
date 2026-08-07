@@ -36,3 +36,8 @@ build/
 
 ### Mac OS ###
 .DS_Store
+
+# User Files
+instructions.txt
+projectPlan.txt
+projectOutline.txt
