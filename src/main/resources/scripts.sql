@@ -1,43 +1,38 @@
+
+-- Users Table
 CREATE TABLE users (
-                       user_id SERIAL PRIMARY KEY,
-                       username VARCHAR(50) NOT NULL,
-                       email VARCHAR(100) NOT NULL UNIQUE,
-                       created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    id SERIAL PRIMARY KEY,
+    username VARCHAR(50) UNIQUE NOT NULL,
+    password VARCHAR(255) NOT NULL,
+    email VARCHAR(100) UNIQUE NOT NULL,
+    phone VARCHAR(20),
+    address VARCHAR(255),
+    role VARCHAR(20) NOT NULL
 );
 
-CREATE TABLE cars (
-                      car_id SERIAL PRIMARY KEY,
-                      make VARCHAR(50) NOT NULL,
-                      model VARCHAR(50) NOT NULL,
-                      year INT NOT NULL,
-                      price DECIMAL(10, 2) NOT NULL,
-                      seller_id INT NOT NULL,
-                      FOREIGN KEY (seller_id) REFERENCES users(user_id) ON DELETE CASCADE
+--Memberships Table
+CREATE TABLE memberships (
+    id SERIAL PRIMARY KEY,
+    membership_type VARCHAR(50) NOT NULL,
+    price DECIMAL(10,2) NOT NULL,
+    member_id INT REFERENCES users(id) ON DELETE CASCADE,
+    purchase_date DATE DEFAULT CURRENT_DATE
 );
 
+--Workout Classes Table
+CREATE TABLE workout_classes (
+    id SERIAL PRIMARY KEY,
+    class_name VARCHAR(100) NOT NULL,
+    description TEXT,
+    trainer_id INT REFERENCES users(id) ON DELETE SET NULL,
+    schedule VARCHAR(100)
+);
 
-
-CREATE TABLE IF NOT EXISTS public.space_fleet_memberships
-(
-    membership_id SERIAL PRIMARY KEY,
-    membership_tier VARCHAR(50) NOT NULL,
-    membership_credits INTEGER NOT NULL,
-    membership_log TEXT,
-    date_registered DATE DEFAULT CURRENT_DATE,
-    astronaut_id INTEGER NOT NULL,
-    CONSTRAINT space_fleet_memberships_astronaut_fkey FOREIGN KEY (astronaut_id)
-    REFERENCES public.astronauts (astronaut_id)
-    ON UPDATE NO ACTION
-    ON DELETE CASCADE
-    );
-
-TABLESPACE pg_default;
-
-
--- Getting sum for sumberships by month example
-SELECT
-    TO_CHAR(date_purchased, 'YYYY-MM') AS month,
-    SUM(membership_price) AS total_revenue
-FROM public.memberships
-GROUP BY month
-ORDER BY month;
+--Gym Merch Table
+CREATE TABLE gym_merch (
+    id SERIAL PRIMARY KEY,
+    product_name VARCHAR(100) NOT NULL,
+    product_type VARCHAR(50),
+    price DECIMAL(10,2) NOT NULL,
+    stock_level INT DEFAULT 0
+);
