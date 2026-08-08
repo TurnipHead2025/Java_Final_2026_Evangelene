@@ -24,7 +24,7 @@ public class WorkoutClass {
         return this.className;
     }
 
-    public String getDescription(){
+    public String getClassDescription(){
         return this.description;
     }
 
@@ -32,7 +32,7 @@ public class WorkoutClass {
         return this.trainerId;
     }
 
-    public String getSchedule(){
+    public String getClassSchedule(){
         return this.schedule;
     }
 
@@ -40,12 +40,12 @@ public class WorkoutClass {
     public void setId(int id){
         this.id = id;
     }
-    
+
     public void setClassName(String className){
         this.className = className;
     }
 
-    public void setDescription(String description){
+    public void setClassDescription(String description){
         this.description = description;
     }
 
@@ -53,7 +53,7 @@ public class WorkoutClass {
         this.trainerId = trainerId;
     }
 
-    public void setschedule(String schedule){
+    public void setClassschedule(String schedule){
         this.schedule = schedule;
     }
 
