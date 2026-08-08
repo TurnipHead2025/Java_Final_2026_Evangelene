@@ -2,6 +2,7 @@ package org.keyin;
 
 import java.sql.SQLException;
 import java.util.Scanner;
+
 import org.keyin.memberships.MembershipService;
 import org.keyin.user.User;
 import org.keyin.user.UserService;
