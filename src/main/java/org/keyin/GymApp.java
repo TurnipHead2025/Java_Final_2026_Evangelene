@@ -2,12 +2,13 @@ package org.keyin;
 
 
 
-import org.keyin.memberships.MembershipService;
-import org.keyin.user.UserService;
-import org.keyin.workoutclasses.WorkoutClassService;
-
 import java.sql.SQLException;
 import java.util.Scanner;
+
+import org.keyin.memberships.MembershipService;
+import org.keyin.user.User;
+import org.keyin.user.UserService;
+import org.keyin.workoutclasses.WorkoutClassService;
 
 public class GymApp {
     public static void main(String[] args) throws SQLException {
@@ -54,7 +55,7 @@ public class GymApp {
         scanner.close();
     }
 
-    private static void logInAsUser(Scanner scanner, UserService userService, MembershipService membershipService, WorkoutService workoutService) {
+    private static void logInAsUser(Scanner scanner, UserService userService, MembershipService membershipService, WorkoutClassService workoutService) {
         System.out.print("Enter username: ");
         String username = scanner.nextLine();
         System.out.print("Enter password: ");
@@ -64,7 +65,7 @@ public class GymApp {
             User user = userService.loginForUser(username, password);
             if (user != null) {
                 System.out.println("Login Successful! Welcome " + user.getUserName());
-                switch (user.getUserRole().toLowerCase()) {
+                switch (user.getRole().toLowerCase()) {
                     case "admin":
                         showAdminMenu(scanner, user, userService, membershipService, workoutService);
                         break;
@@ -93,12 +94,12 @@ public class GymApp {
     }
 
     // Placeholder for Trainer menu
-    private static void showTrainerMenu(Scanner scanner, User user, UserService userService, WorkoutService workoutService) {
+    private static void showTrainerMenu(Scanner scanner, User user, UserService userService, WorkoutClassService workoutService) {
         System.out.println("Trainer menu under construction.");
     }
 
     // Admin menu with minimal implementation
-    private static void showAdminMenu(Scanner scanner, User user, UserService userService, MembershipService membershipService, WorkoutService workoutService) {
+    private static void showAdminMenu(Scanner scanner, User user, UserService userService, MembershipService membershipService, WorkoutClassService workoutService) {
         System.out.println("Admin menu under construction.");
     }
 
@@ -111,9 +112,9 @@ public class GymApp {
         System.out.print("Enter role (Admin/Trainer/Member): ");
         String role = scanner.nextLine();
 
-        User user = new User(username, password, role);
+        User user = new User(username, password, "", "", "", role);
         try {
-            userService.addUser(user);
+            userService.registerUser(user);
             System.out.println("User added successfully!");
         } catch (SQLException e) {
             System.out.println("Error adding user: " + e.getMessage());

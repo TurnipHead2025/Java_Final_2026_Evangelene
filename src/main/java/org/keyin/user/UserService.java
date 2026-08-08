@@ -1,8 +1,9 @@
 package org.keyin.user;
 
 import java.sql.SQLException;
-import org.mindrot.jbcrypt.BCrypt;
 import java.util.List;
+
+import org.mindrot.jbcrypt.BCrypt;
 
 public class UserService {
     private UserDao userDao;
@@ -29,7 +30,7 @@ public class UserService {
     }
 
     //Returns a list of all users- calls the UserDao getAllUsers method (Admin only)
-    public List<user> getAllUsers() throws SQLException{
+    public List<User> getAllUsers() throws SQLException{
         return userDao.getAllUsers();
     }
 
