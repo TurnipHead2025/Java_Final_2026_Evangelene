@@ -93,7 +93,7 @@ public class GymApp {
         System.out.println("Member menu under construction.");
     }
 
-    // Placeholder for Trainer menu
+    // Trainer menu
     private static void showTrainerMenu(Scanner scanner, User user, UserService userService, WorkoutClassService workoutService) {
         System.out.println("Trainer menu under construction.");
     }
