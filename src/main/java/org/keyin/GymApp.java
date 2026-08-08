@@ -1,14 +1,12 @@
 package org.keyin;
 
-
-
 import java.sql.SQLException;
 import java.util.Scanner;
-
 import org.keyin.memberships.MembershipService;
 import org.keyin.user.User;
 import org.keyin.user.UserService;
 import org.keyin.workoutclasses.WorkoutClassService;
+
 
 public class GymApp {
     public static void main(String[] args) throws SQLException {
@@ -55,6 +53,7 @@ public class GymApp {
         scanner.close();
     }
 
+    //Login Method
     private static void logInAsUser(Scanner scanner, UserService userService, MembershipService membershipService, WorkoutClassService workoutService) {
         System.out.print("Enter username: ");
         String username = scanner.nextLine();
@@ -98,21 +97,67 @@ public class GymApp {
         System.out.println("Trainer menu under construction.");
     }
 
-    // Admin menu with minimal implementation
-    private static void showAdminMenu(Scanner scanner, User user, UserService userService, MembershipService membershipService, WorkoutClassService workoutService) {
-        System.out.println("Admin menu under construction.");
-    }
+    // Admin Menu
+private static void showAdminMenu(Scanner scanner, User user, UserService userService, MembershipService membershipService, WorkoutClassService workoutService) {
+        int adminChoice;
+        do {
+        System.out.println("\n=== Admin Menu ===");
+        System.out.println("1. View all users");
+        System.out.println("2. Delete User");
+        System.out.println("3. Logout");
+        System.out.println("Enter your choice: ");
 
-    // Minimal implementation of adding a new user
+        while (!scanner.hasNextInt()){
+            System.out.println("Invalid input! Please enter a valid number");
+            scanner.next();
+        }
+        adminChoice = scanner.nextInt();
+        scanner.nextLine();
+
+        switch(adminChoice) {
+            case 1:
+                try {
+                    userService.getAllUsers().forEach(u -> System.out.println(u));
+                } catch (SQLException e) {
+                    System.out.println("Error: " + e.getMessage());
+                }
+                break;
+            case 2:
+                System.out.println("Enter user Id to delete: ");
+                int id = scanner.nextInt();
+                scanner.nextLine();
+                try {
+                    userService.deleteUser(id);
+                    System.out.println("User deleted.");
+                } catch (SQLException e) {
+                    System.out.println("Error: " + e.getMessage());
+                }    
+                break;
+            case 3:
+                System.out.println("Logging out...");
+                break;
+            default:
+                System.out.println("Invalid choice");                   
+        }
+    }while (adminChoice != 3);
+}
+
+    // Add New User
     private static void addNewUser(Scanner scanner, UserService userService) {
         System.out.print("Enter username: ");
         String username = scanner.nextLine();
         System.out.print("Enter password: ");
         String password = scanner.nextLine();
+        System.out.print("Enter email: ");
+        String email = scanner.nextLine();
+        System.out.print("Enter phone number: ");
+        String phone = scanner.nextLine();
+        System.out.print("Enter address: ");
+        String address = scanner.nextLine();
         System.out.print("Enter role (Admin/Trainer/Member): ");
         String role = scanner.nextLine();
 
-        User user = new User(username, password, "", "", "", role);
+        User user = new User(username, password, email, address, phone, role);
         try {
             userService.registerUser(user);
             System.out.println("User added successfully!");
