@@ -43,6 +43,29 @@ public class WorkoutClassDAO {
             return classes;
         }
 
+        public List<WorkoutClass> getClassesByTrainerId(int trainerId) throws SQLException{
+             List<WorkoutClass> classes = new ArrayList<>();
+            String sql = "SELECT * FROM workout_classes WHERE trainer_id = ?";
+            try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setInt(1, trainerId);
+            try (ResultSet rs = pstmt.executeQuery()){
+                while (rs.next()){
+                    WorkoutClass workoutClass = new WorkoutClass(
+                        rs.getString("class_name"),
+                        rs.getString("description"),
+                        rs.getInt("trainer_id"),
+                        rs.getString("schedule")
+                    );
+                    workoutClass.setId(rs.getInt("id"));
+                    classes.add(workoutClass);
+                }
+            }
+        }
+        return classes;
+
+        // TODO: deleteClass(int id) - DELETE FROM workout_classes WHERE id = ?, returns int rows deleted
+
 //    CustomLogger.logError("WorkoutClassDAO is not implemented yet"); -- This is how calling the logger will look!
 
 }
