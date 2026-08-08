@@ -106,7 +106,7 @@ private static void showAdminMenu(Scanner scanner, User user, UserService userSe
         System.out.println("1. View all users");
         System.out.println("2. Delete User");
         System.out.println("3. Logout");
-        System.out.println("Enter your choice: ");
+        System.out.print("Enter your choice: ");
 
         while (!scanner.hasNextInt()){
             System.out.println("Invalid input! Please enter a valid number");
@@ -124,12 +124,18 @@ private static void showAdminMenu(Scanner scanner, User user, UserService userSe
                 }
                 break;
             case 2:
-                System.out.println("Enter user Id to delete: ");
+                System.out.print("Enter user Id to delete: ");
                 int id = scanner.nextInt();
                 scanner.nextLine();
                 try {
-                    userService.deleteUser(id);
+                    int rowsDeleted = userService.deleteUser(id);
+                    if (rowsDeleted == 0){
+                        System.out.println();
+                        System.err.println("No user found with that ID");
+                    } else{
                     System.out.println("User deleted.");
+                    }
+
                 } catch (SQLException e) {
                     System.out.println("Error: " + e.getMessage());
                 }    
@@ -157,6 +163,7 @@ private static void showAdminMenu(Scanner scanner, User user, UserService userSe
         String address = scanner.nextLine();
         System.out.print("Enter role (Admin/Trainer/Member): ");
         String role = scanner.nextLine();
+        System.out.println();
 
         User user = new User(username, password, email, address, phone, role);
         try {

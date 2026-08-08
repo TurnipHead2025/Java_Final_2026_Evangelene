@@ -1,8 +1,12 @@
 package org.keyin.user;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+
 import org.keyin.database.DatabaseConnection;
 
 public class UserDao {
@@ -70,13 +74,13 @@ public class UserDao {
         return users;    
     }
 
-    //Deletes a user from the DB by their ID (Admin only)
-    public void deleteUser(int id) throws SQLException{
+    //Deletes a user from the DB by their ID (Admin only). Returns the number of rows deleted to 
+    public int deleteUser(int id) throws SQLException{
         String sql = "DELETE FROM users WHERE id = ?";
         try (Connection conn = DatabaseConnection.getConnection();
             PreparedStatement pstmt = conn.prepareStatement(sql)){
             pstmt.setInt(1, id);
-            pstmt.executeUpdate();        
+            return pstmt.executeUpdate();        
             }
     }
 }

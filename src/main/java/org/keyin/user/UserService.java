@@ -35,7 +35,7 @@ public class UserService {
     }
 
     //Deletes a user by ID- calls UserDao deleteUser method (Admin Only)
-    public void deleteUser(int id) throws SQLException{
-        userDao.deleteUser(id);
+    public int deleteUser(int id) throws SQLException{
+        return userDao.deleteUser(id);
     }
 }
