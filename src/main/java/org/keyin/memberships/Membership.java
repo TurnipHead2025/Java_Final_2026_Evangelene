@@ -29,7 +29,7 @@ public class Membership {
         return price;
     }
 
-    public int getmemberId(){
+    public int getMemberId(){
         return memberId;
     }
 
