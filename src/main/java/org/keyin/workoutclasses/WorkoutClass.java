@@ -58,6 +58,7 @@ public class WorkoutClass {
     }
 
     //toString
+    @Override
     public String toString(){
         return "Class name : " + className + " Description: " + description + " Trainer ID: " + trainerId + " Schedule: " + schedule ;
     }
