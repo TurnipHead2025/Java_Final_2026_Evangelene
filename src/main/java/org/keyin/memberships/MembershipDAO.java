@@ -12,7 +12,7 @@ public class MembershipDAO {
 
         // Add membership (Trainer and Member)
     public void addMemberShip(Membership membership) throws SQLException {
-        String sql = "INSERT INTO memberships (membership_type, price, member_id, purchase_date ) VALUES (?, ?, ?, ?)";
+        String sql = "INSERT INTO memberships (membership_type, price, member_id, purchase_date ) VALUES (?, ?, ?, ?::date)";
         try (Connection conn = DatabaseConnection.getConnection();
         PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setString(1, membership.getMembershipType());

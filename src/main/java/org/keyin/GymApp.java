@@ -4,6 +4,7 @@ import java.sql.SQLException;
 import java.util.Scanner;
 
 import org.keyin.memberships.MembershipService;
+import org.keyin.memberships.Membership;
 import org.keyin.user.User;
 import org.keyin.user.UserService;
 import org.keyin.workoutclasses.WorkoutClass;
@@ -71,10 +72,10 @@ public class GymApp {
                         showAdminMenu(scanner, user, userService, membershipService, workoutService);
                         break;
                     case "trainer":
-                        // show menu for trainer
+                        showTrainerMenu(scanner, user, membershipService, workoutService);
                         break;
                     case "member":
-                        // show menu for member
+                        showMemberMenu(scanner, user, membershipService, workoutService);
                         break;
                     default:
 
@@ -89,9 +90,68 @@ public class GymApp {
         }
     }
 
-    // Placeholder for Member menu
-    private static void showMemberMenu(Scanner scanner, User user, UserService userService, MembershipService membershipService) {
-        System.out.println("Member menu under construction.");
+    // Member menu
+    private static void showMemberMenu(Scanner scanner, User user, UserService userService, MembershipService membershipService, WorkoutClassService workoutService) {
+        int memberChoice;
+        do{
+            System.out.println("\n=== Member Menu ===");
+            System.out.println("1. Purchase membership");
+            System.out.println("2. View merch (coming soon)");
+            System.out.println("3. Browse classes");
+            System.out.println("4. View My membership");
+            System.out.println("5. Logout");
+            System.out.print("Enter your choice: ");
+
+            while (!scanner.hasNextInt()){
+            System.out.println("Invalid input. Please enter a valid number");
+            scanner.next();
+            }
+            memberChoice = scanner.nextInt();
+            scanner.nextLine();
+
+            switch(memberChoice){
+                case 1: // Purchase membership
+                 try {
+                    System.out.print("Enter the membership type (standard, aluminum, gold):");
+                    String membershipType = scanner.nextLine();
+                    System.out.print("Enter the monthly price: ");
+                    double price = scanner.nextDouble();
+                    scanner.nextLine();
+                    System.out.print("Enter the purchase date (YYYY-MM-DD): ");
+                    String purchaseDate = scanner.nextLine();
+                    int memberId = user.getId();
+
+                    Membership member = new Membership(membershipType, price, memberId,purchaseDate);
+                    membershipService.addMembership(member);
+                    System.out.println();
+                    System.out.println("Membership purchased successfully!");
+                } catch (SQLException e) {
+                    System.out.println("Error: " + e.getMessage());
+                } 
+                break;  
+                case 2: //View merch
+                break;
+                case 3: //browse all classes
+                try {
+                    workoutService.getAllClasses().forEach(u -> System.out.println(u));
+                } catch (SQLException e) {
+                    System.out.println("Error: " + e.getMessage());
+                }
+                case 4: //view membership
+                try {
+                    Membership myMembership = membershipService.getMembershipByMemberId(user.getId());
+                    if (myMembership != null){
+                        System.out.println(myMembership);
+                    }else {
+                        System.out.println("No membership found.");
+                    }
+                } catch (SQLException e) {
+                    System.out.println("Error: " + e.getMessage());
+                } 
+                break;
+
+            }
+        }while (memberChoice !=5);
     }
 
     // Trainer menu
@@ -169,19 +229,22 @@ public class GymApp {
                     System.out.print("Enter the monthly price: ");
                     double price = scanner.nextDouble();
                     scanner.nextLine();
-                    System.out.print("Enter the purchase date: ");
+                    System.out.print("Enter the purchase date (YYYY-MM-DD): ");
                     String purchaseDate = scanner.nextLine();
                     int memberId = user.getId();
 
                     Membership member = new Membership(membershipType, price, memberId,purchaseDate);
                     membershipService.addMembership(member);
+                    System.out.println();
+                    System.out.println("Membership purchased successfully!");
                 } catch (SQLException e) {
                     System.out.println("Error: " + e.getMessage());
                 } 
                 break;  
             case 6:
-                System.out.print("View Merch Coming soon!")      
+                System.out.print("View Merch Coming soon!");    
             case 7:
+                System.out.println();
                 System.out.println("Logging out...");
                 break;
             default:
