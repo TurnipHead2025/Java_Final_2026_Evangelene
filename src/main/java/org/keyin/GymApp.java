@@ -75,7 +75,7 @@ public class GymApp {
                         showTrainerMenu(scanner, user, membershipService, workoutService);
                         break;
                     case "member":
-                        showMemberMenu(scanner, user, membershipService, workoutService);
+                        showMemberMenu(scanner, user, userService, membershipService, workoutService);
                         break;
                     default:
 
@@ -133,6 +133,7 @@ public class GymApp {
                 break;
                 case 3: //browse all classes
                 try {
+                    System.out.println();
                     workoutService.getAllClasses().forEach(u -> System.out.println(u));
                 } catch (SQLException e) {
                     System.out.println("Error: " + e.getMessage());
@@ -149,7 +150,12 @@ public class GymApp {
                     System.out.println("Error: " + e.getMessage());
                 } 
                 break;
-
+                case 5:
+                    System.out.println();
+                    System.out.println("Logging out...");
+                break;
+            default:
+                System.out.println("Invalid input. Please enter a valid number");
             }
         }while (memberChoice !=5);
     }
@@ -265,7 +271,11 @@ private static void showAdminMenu(Scanner scanner, User user, UserService userSe
         System.out.println("3. View Total Membership Revenue");
         System.out.println("4. Add Merch (Coming Soon)");
         System.out.println("5. View Merch (Coming Soon)");
-        System.out.println("6. Logout");
+        System.out.println("6. View all classes");
+        System.out.println("7. Create Workout Class");
+        System.out.println("8. Delete Workout Class");
+        System.out.println("9. Update Workout Class (coming soon!");
+        System.out.println("10. Logout");
         System.out.print("Enter your choice: ");
 
         while (!scanner.hasNextInt()){
@@ -278,6 +288,7 @@ private static void showAdminMenu(Scanner scanner, User user, UserService userSe
         switch(adminChoice) {
             case 1: //view All users
                 try {
+                    System.out.println();
                     userService.getAllUsers().forEach(u -> System.out.println(u));
                 } catch (SQLException e) {
                     System.out.println("Error: " + e.getMessage());
@@ -293,7 +304,8 @@ private static void showAdminMenu(Scanner scanner, User user, UserService userSe
                         System.out.println();
                         System.err.println("No user found with that ID");
                     } else{
-                    System.out.println("User deleted.");
+                        System.out.println();    
+                        System.out.println("User deleted.");
                     }
 
                 } catch (SQLException e) {
@@ -302,6 +314,7 @@ private static void showAdminMenu(Scanner scanner, User user, UserService userSe
                 break;
             case 3: //View total membership revenue
                 try {
+                    System.out.println();
                     double revenue = membershipService.getTotalRevenue();
                     System.out.println("Total Membership Revenue: $" + revenue);
                 } catch (SQLException e) {
@@ -314,13 +327,61 @@ private static void showAdminMenu(Scanner scanner, User user, UserService userSe
             case 5:
                 System.out.println("View Merch - Coming Soon.");
                 break;
-            case 6:
+            case 6: //View all classes 
+                 try {
+                    System.out.println();
+                    workoutService.getAllClasses().forEach(u -> System.out.println(u));
+                } catch (SQLException e) {
+                    System.out.println("Error: " + e.getMessage());
+                }
+                break;
+            case 7: //create workout class 
+                 try {
+                System.out.print("Enter the Class Name: ");
+                String classname = scanner.nextLine();
+                System.out.print("Enter the description: ");
+                String description = scanner.nextLine();
+                System.out.print("Enter the schedule: ");
+                String schedule = scanner.nextLine();
+                System.out.print("Enter Trainer ID to assign this class to: ");
+                int trainerId = scanner.nextInt();
+                scanner.nextLine();
+                trainerId = user.getId();
+
+                WorkoutClass workoutClass = new WorkoutClass(classname, description, trainerId, schedule); 
+                workoutService.createClass(workoutClass);
+                System.out.println("Class added successfully!");
+            } catch (Exception e) {
+                System.out.println("Error adding class: " + e.getMessage());
+            }           
+                break;
+            case 8: //Delete Class
+                System.out.print("Enter Class Id to delete: ");
+                int classId = scanner.nextInt();
+                scanner.nextLine();
+                try {
+                    int rowsDeleted = workoutService.deleteClass(classId);
+                    if (rowsDeleted == 0){
+                        System.out.println();
+                        System.err.println("No class found with that ID");
+                    } else{
+                    System.out.println("Class deleted.");
+                    }
+
+                } catch (SQLException e) {
+                    System.out.println("Error: " + e.getMessage());
+                }    
+                break;
+            case 9: //update class
+                System.out.println("Coming soon");
+            case 10:
+                System.out.println();
                 System.out.println("Logging out...");
                 break;
             default:
                 System.out.println("Invalid choice");                   
         }
-    }while (adminChoice != 6);
+    }while (adminChoice != 10);
 }
 
     // Add New User

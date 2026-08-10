@@ -62,6 +62,6 @@ public class Membership {
     //toString
     @Override
     public String toString(){
-        return "Member Id: " + memberId + " Membership Type: " + membershipType + " Price: " + price + " Purchase Date: " + purchaseDate;
+        return "Member Id: " + memberId + ", Membership Type: " + membershipType + ", Price: " + price + ", Purchase Date: " + purchaseDate;
     }
 }
