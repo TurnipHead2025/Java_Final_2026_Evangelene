@@ -32,4 +32,9 @@ public class WorkoutClassService {
     public int deleteClass(int id) throws SQLException{
         return workoutDAO.deleteClasses(id);
     }
+
+    //Update Class by Id (Admin and Trainer)
+    public int updateClass(String className, String description, String schedule, int id) throws SQLException{
+        return workoutDAO.updateClass(className, description, schedule, id);
+    }
 }
