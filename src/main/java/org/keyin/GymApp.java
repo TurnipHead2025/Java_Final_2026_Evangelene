@@ -1,8 +1,11 @@
 package org.keyin;
-
+import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Scanner;
+import java.util.logging.FileHandler;
+import java.util.logging.Logger;
+import java.util.logging.SimpleFormatter;
 
 import org.keyin.gymproduct.GymProduct;
 import org.keyin.gymproduct.GymProductService;
@@ -15,7 +18,20 @@ import org.keyin.workoutclasses.WorkoutClassService;
 
 
 public class GymApp {
+    private static final Logger logger = Logger.getLogger(GymApp.class.getName());
+
     public static void main(String[] args) throws SQLException {
+        //logger
+        try{
+            FileHandler fileHandler = new FileHandler("app.log", true);
+            fileHandler.setFormatter(new SimpleFormatter());
+            logger.addHandler(fileHandler);
+        }catch (IOException e){
+            System.out.println("Logger setup failed:" + e.getMessage());
+            logger.warning("Database error: " + e.getMessage());
+        } 
+        logger.info("Gym Management System started.");       
+        
         // Initialize services
         UserService userService = new UserService();
         MembershipService membershipService = new MembershipService();
@@ -87,6 +103,7 @@ public class GymApp {
                 }
             } else {
                 System.out.println("Login Failed! Invalid credentials.");
+                logger.warning("Failed login attempt for username: " +  username);
             }
         } catch (SQLException e) {
             System.out.println("An error occurred while logging in.");
@@ -131,6 +148,7 @@ public class GymApp {
                         System.out.println("Membership purchased successfully!");
                     } catch (SQLException e) {
                     System.out.println("Error: " + e.getMessage());
+                    logger.warning("Database error: " + e.getMessage());
                 } 
                 break;  
                 case 2: //View merch
@@ -140,6 +158,7 @@ public class GymApp {
                     products.forEach(p -> System.out.println(p));
                     } catch (SQLException e){
                         System.out.println("Error: " + e.getMessage());
+                        logger.warning("Database error: " + e.getMessage());
                     }                
                 break;
                 case 3: //browse all classes
@@ -148,6 +167,7 @@ public class GymApp {
                     workoutService.getAllClasses().forEach(u -> System.out.println(u));
                 } catch (SQLException e) {
                     System.out.println("Error: " + e.getMessage());
+                    logger.warning("Database error: " + e.getMessage());
                 }
                 break;
                 case 4: //view membership
@@ -160,6 +180,7 @@ public class GymApp {
                     }
                 } catch (SQLException e) {
                     System.out.println("Error: " + e.getMessage());
+                    logger.warning("Database error: " + e.getMessage());
                 } 
                 break;
                 case 5:
@@ -209,6 +230,7 @@ public class GymApp {
                     System.out.println("Class added successfully!");
                 } catch (Exception e) {
                 System.out.println("Error adding class: " + e.getMessage());
+                logger.warning("Database error: " + e.getMessage());
             }           
             break;
 
@@ -233,6 +255,7 @@ public class GymApp {
                     }
                 } catch (SQLException e){
                 System.out.println("Error: " + e.getMessage());
+                logger.warning("Database error: " + e.getMessage());
             }
             break;   
             
@@ -251,6 +274,7 @@ public class GymApp {
 
                 } catch (SQLException e) {
                     System.out.println("Error: " + e.getMessage());
+                    logger.warning("Database error: " + e.getMessage());
                 }    
             break;
             case 4: //view classes
@@ -259,6 +283,7 @@ public class GymApp {
                         .forEach(c -> System.out.println(c));
                 } catch (SQLException e) {
                     System.out.println("Error: " + e.getMessage());
+                    logger.warning("Database error: " + e.getMessage());
                 } 
             break; 
             case 5: //Add membership (purchase)  
@@ -278,6 +303,7 @@ public class GymApp {
                     System.out.println("Membership purchased successfully!");
                 } catch (SQLException e) {
                     System.out.println("Error: " + e.getMessage());
+                    logger.warning("Database error: " + e.getMessage());
                 } 
             break;  
             case 6: //View Merch
@@ -287,6 +313,7 @@ public class GymApp {
                     products.forEach(p -> System.out.println(p));
                     }catch (SQLException e){
                         System.out.println("Error: " + e.getMessage());
+                        logger.warning("Database error: " + e.getMessage());
                     }                
                 break;   
             case 7:
@@ -332,6 +359,7 @@ private static void showAdminMenu(Scanner scanner, User user, UserService userSe
                     userService.getAllUsers().forEach(u -> System.out.println(u));
                 } catch (SQLException e) {
                     System.out.println("Error: " + e.getMessage());
+                    logger.warning("Database error: " + e.getMessage());
                 }
             break;
             case 2: //delete user
@@ -346,10 +374,12 @@ private static void showAdminMenu(Scanner scanner, User user, UserService userSe
                     } else{
                         System.out.println();    
                         System.out.println("User deleted.");
+                        logger.warning("Admin deleted user with ID: " + id);
                     }
 
                 } catch (SQLException e) {
                     System.out.println("Error: " + e.getMessage());
+                    logger.warning("Database error: " + e.getMessage());
                 }    
             break;
             case 3: //View total membership revenue
@@ -359,6 +389,7 @@ private static void showAdminMenu(Scanner scanner, User user, UserService userSe
                     System.out.println("Total Membership Revenue: $" + revenue);
                 } catch (SQLException e) {
                     System.out.println("Error: " + e.getMessage());
+                    logger.warning("Database error: " + e.getMessage());
                 }
             break;
             case 4: //add Merch
@@ -378,6 +409,7 @@ private static void showAdminMenu(Scanner scanner, User user, UserService userSe
                     System.out.println("Product added successfully");
                 }catch (SQLException e) {
                     System.out.println("Error: " + e.getMessage());
+                    logger.warning("Database error: " + e.getMessage());
                 }
             break;
             case 5: //View Merch and total Valuation
@@ -393,6 +425,7 @@ private static void showAdminMenu(Scanner scanner, User user, UserService userSe
                     System.out.printf("Total Valuation of all products: $%.2f%n", totalValuation);          
                 }catch(SQLException e){
                     System.out.println("Error: " + e.getMessage());
+                    logger.warning("Database error: " + e.getMessage());
                 }
             break;
             case 6: //View all classes 
@@ -401,6 +434,7 @@ private static void showAdminMenu(Scanner scanner, User user, UserService userSe
                     workoutService.getAllClasses().forEach(u -> System.out.println(u));
                 } catch (SQLException e) {
                     System.out.println("Error: " + e.getMessage());
+                    logger.warning("Database error: " + e.getMessage());
                 }
             break;
             case 7: //create workout class 
@@ -420,6 +454,7 @@ private static void showAdminMenu(Scanner scanner, User user, UserService userSe
                     System.out.println("Class added successfully!");
                 } catch (Exception e) {
                 System.out.println("Error adding class: " + e.getMessage());
+                logger.warning("Database error: " + e.getMessage());
             }           
             break;
             case 8: //Delete Class
@@ -437,6 +472,7 @@ private static void showAdminMenu(Scanner scanner, User user, UserService userSe
 
                 } catch (SQLException e) {
                     System.out.println("Error: " + e.getMessage());
+                    logger.warning("Database error: " + e.getMessage());
                 }    
             break;
             case 9: //update class by class Id
@@ -460,6 +496,7 @@ private static void showAdminMenu(Scanner scanner, User user, UserService userSe
                     }
                } catch (SQLException e){
                 System.out.println("Error: " + e.getMessage());
+                logger.warning("Database error: " + e.getMessage());
                }
             break;
             case 10:
@@ -494,6 +531,7 @@ private static void showAdminMenu(Scanner scanner, User user, UserService userSe
             System.out.println("User added successfully!");
         } catch (SQLException e) {
             System.out.println("Error adding user: " + e.getMessage());
+            logger.warning("Database error: " + e.getMessage());
         }
     }
 }

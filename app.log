@@ -1,0 +1,4 @@
+Aug 11, 2026 12:01:48 P.M. org.keyin.GymApp main
+INFO: Gym Management System started.
+Aug 11, 2026 12:02:23 P.M. org.keyin.GymApp showAdminMenu
+WARNING: Admin deleted user with ID: 2

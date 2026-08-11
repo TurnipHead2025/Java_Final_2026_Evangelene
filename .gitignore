@@ -37,6 +37,9 @@ build/
 ### Mac OS ###
 .DS_Store
 
+#Github
+/.github/modernize/java-upgrade
+
 # User Files
 instructions.txt
 projectPlan.txt
