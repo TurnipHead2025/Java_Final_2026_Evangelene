@@ -2,3 +2,17 @@ Aug 11, 2026 12:01:48 P.M. org.keyin.GymApp main
 INFO: Gym Management System started.
 Aug 11, 2026 12:02:23 P.M. org.keyin.GymApp showAdminMenu
 WARNING: Admin deleted user with ID: 2
+Aug 11, 2026 1:09:13 P.M. org.keyin.GymApp main
+INFO: Gym Management System started.
+Aug 11, 2026 1:18:15 P.M. org.keyin.GymApp logInAsUser
+WARNING: Failed login attempt for username: TurnipHead
+Aug 11, 2026 1:18:33 P.M. org.keyin.GymApp logInAsUser
+WARNING: Failed login attempt for username: TurnipHead
+Aug 11, 2026 1:58:10 P.M. org.keyin.GymApp showAdminMenu
+WARNING: Database error: ERROR: insert or update on table "workout_classes" violates foreign key constraint "workout_classes_trainer_id_fkey"
+  Detail: Key (trainer_id)=(2) is not present in table "users".
+Aug 11, 2026 2:08:20 P.M. org.keyin.GymApp showAdminMenu
+WARNING: Admin deleted user with ID: 5
+Aug 11, 2026 2:09:35 P.M. org.keyin.GymApp showAdminMenu
+WARNING: Database error: ERROR: insert or update on table "workout_classes" violates foreign key constraint "workout_classes_trainer_id_fkey"
+  Detail: Key (trainer_id)=(1) is not present in table "users".

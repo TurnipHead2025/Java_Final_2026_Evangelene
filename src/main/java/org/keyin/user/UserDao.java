@@ -74,7 +74,7 @@ public class UserDao {
         return users;    
     }
 
-    //Deletes a user from the DB by their ID (Admin only). Returns the number of rows deleted to 
+    //Deletes a user from the DB by their ID (Admin only). Returns the number of rows deleted 
     public int deleteUser(int id) throws SQLException{
         String sql = "DELETE FROM users WHERE id = ?";
         try (Connection conn = DatabaseConnection.getConnection();
