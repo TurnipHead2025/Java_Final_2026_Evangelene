@@ -61,6 +61,6 @@ public class GymProduct {
     //toString
     @Override
     public String toString() {
-        return "GymProduct" + "Product id:" + id + ", Product Name" + productName  + ", Product Type: " + productType + ", Price: " + price + ", Quantity in stock: " + quantity;
+        return "GymProduct" + "Product id:" + id + ", Product Name " + productName  + ", Product Type: " + productType + ", Price: " + price + ", Quantity in stock: " + quantity;
     }
 }

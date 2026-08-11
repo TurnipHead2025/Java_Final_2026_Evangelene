@@ -1,8 +1,11 @@
 package org.keyin;
 
 import java.sql.SQLException;
+import java.util.List;
 import java.util.Scanner;
 
+import org.keyin.gymproduct.GymProduct;
+import org.keyin.gymproduct.GymProductService;
 import org.keyin.memberships.Membership;
 import org.keyin.memberships.MembershipService;
 import org.keyin.user.User;
@@ -17,6 +20,7 @@ public class GymApp {
         UserService userService = new UserService();
         MembershipService membershipService = new MembershipService();
         WorkoutClassService workoutService = new WorkoutClassService();
+        GymProductService gymProductService = new GymProductService ();
 
         // Scanner for user input
         Scanner scanner = new Scanner(System.in);
@@ -41,13 +45,13 @@ public class GymApp {
             switch (choice) {
                 case 1:
                     addNewUser(scanner, userService);
-                    break;
+                break;
                 case 2:
-                    logInAsUser(scanner, userService, membershipService, workoutService);
-                    break;
+                    logInAsUser(scanner, userService, membershipService, workoutService, gymProductService);
+                break;
                 case 3:
                     System.out.println("Exiting the program...");
-                    break;
+                break;
                 default:
                     System.out.println("Invalid choice. Please select a valid option.");
             }
@@ -57,7 +61,7 @@ public class GymApp {
     }
 
     //Login Method
-    private static void logInAsUser(Scanner scanner, UserService userService, MembershipService membershipService, WorkoutClassService workoutService) {
+    private static void logInAsUser(Scanner scanner, UserService userService, MembershipService membershipService, WorkoutClassService workoutService, GymProductService gymProductService) {
         System.out.print("Enter username: ");
         String username = scanner.nextLine();
         System.out.print("Enter password: ");
@@ -69,17 +73,17 @@ public class GymApp {
                 System.out.println("Login Successful! Welcome " + user.getUserName());
                 switch (user.getRole().toLowerCase()) {
                     case "admin":
-                        showAdminMenu(scanner, user, userService, membershipService, workoutService);
-                        break;
+                        showAdminMenu(scanner, user, userService, membershipService, workoutService, gymProductService);
+                    break;
                     case "trainer":
-                        showTrainerMenu(scanner, user, membershipService, workoutService);
-                        break;
+                        showTrainerMenu(scanner, user, membershipService, workoutService, gymProductService);
+                    break;
                     case "member":
-                        showMemberMenu(scanner, user, userService, membershipService, workoutService);
-                        break;
+                        showMemberMenu(scanner, user, userService, membershipService, workoutService, gymProductService);
+                    break;
                     default:
-
-        break;
+                        System.out.println("Unknown role. Please choose Member, Trainer, or Admin");
+                    break;
                 }
             } else {
                 System.out.println("Login Failed! Invalid credentials.");
@@ -91,12 +95,12 @@ public class GymApp {
     }
 
     // Member menu
-    private static void showMemberMenu(Scanner scanner, User user, UserService userService, MembershipService membershipService, WorkoutClassService workoutService) {
+    private static void showMemberMenu(Scanner scanner, User user, UserService userService, MembershipService membershipService, WorkoutClassService workoutService, GymProductService gymProductService) {
         int memberChoice;
         do{
             System.out.println("\n=== Member Menu ===");
             System.out.println("1. Purchase membership");
-            System.out.println("2. View merch (coming soon)");
+            System.out.println("2. View merch");
             System.out.println("3. Browse classes");
             System.out.println("4. View My membership");
             System.out.println("5. Logout");
@@ -111,25 +115,32 @@ public class GymApp {
 
             switch(memberChoice){
                 case 1: // Purchase membership
-                 try {
-                    System.out.print("Enter the membership type (standard, aluminum, gold):");
-                    String membershipType = scanner.nextLine();
-                    System.out.print("Enter the monthly price: ");
-                    double price = scanner.nextDouble();
-                    scanner.nextLine();
-                    System.out.print("Enter the purchase date (YYYY-MM-DD): ");
-                    String purchaseDate = scanner.nextLine();
-                    int memberId = user.getId();
+                    try {
+                        System.out.print("Enter the membership type (standard, aluminum, gold):");
+                        String membershipType = scanner.nextLine();
+                        System.out.print("Enter the monthly price: ");
+                        double price = scanner.nextDouble();
+                        scanner.nextLine();
+                        System.out.print("Enter the purchase date (YYYY-MM-DD): ");
+                        String purchaseDate = scanner.nextLine();
+                        int memberId = user.getId();
 
-                    Membership member = new Membership(membershipType, price, memberId,purchaseDate);
-                    membershipService.addMembership(member);
-                    System.out.println();
-                    System.out.println("Membership purchased successfully!");
-                } catch (SQLException e) {
+                        Membership member = new Membership(membershipType, price, memberId,purchaseDate);
+                        membershipService.addMembership(member);
+                        System.out.println();
+                        System.out.println("Membership purchased successfully!");
+                    } catch (SQLException e) {
                     System.out.println("Error: " + e.getMessage());
                 } 
                 break;  
                 case 2: //View merch
+                    try{
+                    System.out.println();
+                    List<GymProduct> products = gymProductService.getAllProducts();
+                    products.forEach(p -> System.out.println(p));
+                    } catch (SQLException e){
+                        System.out.println("Error: " + e.getMessage());
+                    }                
                 break;
                 case 3: //browse all classes
                 try {
@@ -138,6 +149,7 @@ public class GymApp {
                 } catch (SQLException e) {
                     System.out.println("Error: " + e.getMessage());
                 }
+                break;
                 case 4: //view membership
                 try {
                     Membership myMembership = membershipService.getMembershipByMemberId(user.getId());
@@ -161,18 +173,18 @@ public class GymApp {
     }
 
     // Trainer menu
-    private static void showTrainerMenu(Scanner scanner, User user, MembershipService membershipService, WorkoutClassService workoutService) {
+    private static void showTrainerMenu(Scanner scanner, User user, MembershipService membershipService, WorkoutClassService workoutService, GymProductService gymProductService) {
         int trainerChoice;
         do { 
-        System.out.println("\n=== Trainer Menu ===");
-        System.out.println("1. Create Class");
-        System.out.println("2. Update Class");
-        System.out.println("3. Delete Class");
-        System.out.println("4. View My Classes");
-        System.out.println("5. Purchase Membership");
-        System.out.println("6. View Merch (Coming Soon)");
-        System.out.println("7. Logout");
-        System.out.print("Enter your choice: ");
+            System.out.println("\n=== Trainer Menu ===");
+            System.out.println("1. Create Class");
+            System.out.println("2. Update Class");
+            System.out.println("3. Delete Class");
+            System.out.println("4. View My Classes");
+            System.out.println("5. Purchase Membership");
+            System.out.println("6. View Merch");
+            System.out.println("7. Logout");
+            System.out.print("Enter your choice: ");
             
         while (!scanner.hasNextInt()){
             System.out.println("Invalid input. Please enter a valid number");
@@ -183,19 +195,19 @@ public class GymApp {
 
         switch (trainerChoice) {
             case 1: //create class
-            try {
-                System.out.print("Enter the Class Name: ");
-                String classname = scanner.nextLine();
-                System.out.print("Enter the description: ");
-                String description = scanner.nextLine();
-                System.out.print("Enter the schedule: ");
-                String schedule = scanner.nextLine();
-                int trainerId = user.getId();
+                try {
+                    System.out.print("Enter the Class Name: ");
+                    String classname = scanner.nextLine();
+                    System.out.print("Enter the description: ");
+                    String description = scanner.nextLine();
+                    System.out.print("Enter the schedule: ");
+                    String schedule = scanner.nextLine();
+                    int trainerId = user.getId();
 
-                WorkoutClass workoutClass = new WorkoutClass(classname, description,trainerId, schedule); 
-                workoutService.createClass(workoutClass);
-                System.out.println("Class added successfully!");
-            } catch (Exception e) {
+                    WorkoutClass workoutClass = new WorkoutClass(classname, description,trainerId, schedule); 
+                    workoutService.createClass(workoutClass);
+                    System.out.println("Class added successfully!");
+                } catch (Exception e) {
                 System.out.println("Error adding class: " + e.getMessage());
             }           
             break;
@@ -268,8 +280,15 @@ public class GymApp {
                     System.out.println("Error: " + e.getMessage());
                 } 
             break;  
-            case 6:
-                System.out.print("View Merch Coming soon!");    
+            case 6: //View Merch
+                try{
+                    System.out.println();
+                    List<GymProduct> products = gymProductService.getAllProducts();
+                    products.forEach(p -> System.out.println(p));
+                    }catch (SQLException e){
+                        System.out.println("Error: " + e.getMessage());
+                    }                
+                break;   
             case 7:
                 System.out.println();
                 System.out.println("Logging out...");
@@ -283,21 +302,21 @@ public class GymApp {
         
 
     // Admin Menu
-private static void showAdminMenu(Scanner scanner, User user, UserService userService, MembershipService membershipService, WorkoutClassService workoutService) {
+private static void showAdminMenu(Scanner scanner, User user, UserService userService, MembershipService membershipService, WorkoutClassService workoutService, GymProductService gymProductService) {
         int adminChoice;
         do {
-        System.out.println("\n=== Admin Menu ===");
-        System.out.println("1. View all users");
-        System.out.println("2. Delete User");
-        System.out.println("3. View Total Membership Revenue");
-        System.out.println("4. Add Merch (Coming Soon)");
-        System.out.println("5. View Merch (Coming Soon)");
-        System.out.println("6. View all classes");
-        System.out.println("7. Create Workout Class");
-        System.out.println("8. Delete Workout Class");
-        System.out.println("9. Update Workout Class");
-        System.out.println("10. Logout");
-        System.out.print("Enter your choice: ");
+            System.out.println("\n=== Admin Menu ===");
+            System.out.println("1. View all users");
+            System.out.println("2. Delete User");
+            System.out.println("3. View Total Membership Revenue");
+            System.out.println("4. Add Merch");
+            System.out.println("5. View Merch and Valuation");
+            System.out.println("6. View all classes");
+            System.out.println("7. Create Workout Class");
+            System.out.println("8. Delete Workout Class");
+            System.out.println("9. Update Workout Class");
+            System.out.println("10. Logout");
+            System.out.print("Enter your choice: ");
 
         while (!scanner.hasNextInt()){
             System.out.println("Invalid input! Please enter a valid number");
@@ -342,14 +361,42 @@ private static void showAdminMenu(Scanner scanner, User user, UserService userSe
                     System.out.println("Error: " + e.getMessage());
                 }
             break;
-            case 4:
-                System.out.println("Add Merch - Coming Soon.");
+            case 4: //add Merch
+                System.out.print("Enter the product name: ");
+                String productName = scanner.nextLine();
+                System.out.print("Enter the product type: ");
+                String productType = scanner.nextLine();
+                System.out.print("Enter the product price: ");
+                double productPrice = scanner.nextDouble();
+                System.out.print("Enter the product quantity: ");
+                int productQuantity = scanner.nextInt();
+                scanner.nextLine(); //Consume newLine
+                GymProduct gymProduct = new GymProduct(productName, productType, productPrice, productQuantity);
+                try{
+                    gymProductService.addNewProduct(gymProduct);
+                    System.out.println();
+                    System.out.println("Product added successfully");
+                }catch (SQLException e) {
+                    System.out.println("Error: " + e.getMessage());
+                }
             break;
-            case 5:
-                System.out.println("View Merch - Coming Soon.");
+            case 5: //View Merch and total Valuation
+                try{
+                    System.out.println();
+                    List<GymProduct> products = gymProductService.getAllProducts();
+                    products.forEach(p -> System.out.println(p));
+                    double totalValuation = 0;
+                    for (GymProduct product : products){
+                        totalValuation += product.getPrice() * product.getQuantity();
+                    }          
+                    System.out.println();
+                    System.out.printf("Total Valuation of all products: $%.2f%n", totalValuation);          
+                }catch(SQLException e){
+                    System.out.println("Error: " + e.getMessage());
+                }
             break;
             case 6: //View all classes 
-                 try {
+                try {
                     System.out.println();
                     workoutService.getAllClasses().forEach(u -> System.out.println(u));
                 } catch (SQLException e) {
@@ -357,21 +404,21 @@ private static void showAdminMenu(Scanner scanner, User user, UserService userSe
                 }
             break;
             case 7: //create workout class 
-                 try {
-                System.out.print("Enter the Class Name: ");
-                String classname = scanner.nextLine();
-                System.out.print("Enter the description: ");
-                String description = scanner.nextLine();
-                System.out.print("Enter the schedule: ");
-                String schedule = scanner.nextLine();
-                System.out.print("Enter Trainer ID to assign this class to: ");
-                int trainerId = scanner.nextInt();
-                scanner.nextLine();
+                try {
+                    System.out.print("Enter the Class Name: ");
+                    String classname = scanner.nextLine();
+                    System.out.print("Enter the description: ");
+                    String description = scanner.nextLine();
+                    System.out.print("Enter the schedule: ");
+                    String schedule = scanner.nextLine();
+                    System.out.print("Enter Trainer ID to assign this class to: ");
+                    int trainerId = scanner.nextInt();
+                    scanner.nextLine();
 
-                WorkoutClass workoutClass = new WorkoutClass(classname, description, trainerId, schedule); 
-                workoutService.createClass(workoutClass);
-                System.out.println("Class added successfully!");
-            } catch (Exception e) {
+                    WorkoutClass workoutClass = new WorkoutClass(classname, description, trainerId, schedule); 
+                    workoutService.createClass(workoutClass);
+                    System.out.println("Class added successfully!");
+                } catch (Exception e) {
                 System.out.println("Error adding class: " + e.getMessage());
             }           
             break;
