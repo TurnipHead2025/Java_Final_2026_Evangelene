@@ -1,11 +1,12 @@
 package org.keyin.workoutclasses;
-import org.keyin.database.DatabaseConnection;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+
+import org.keyin.database.DatabaseConnection;
 
 
 public class WorkoutClassDAO {
@@ -76,7 +77,7 @@ public class WorkoutClassDAO {
             }
     }    
 
-    //Update Class by id
+    //Update Class by  Class Id
     public int updateClass(String className, String description, String schedule, int id) throws SQLException{
         String sql = "UPDATE workout_classes SET class_name=?, description=?, schedule=? WHERE id = ?";
          try (Connection conn = DatabaseConnection.getConnection();

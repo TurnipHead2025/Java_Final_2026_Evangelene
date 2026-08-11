@@ -53,14 +53,14 @@ public class WorkoutClass {
         this.trainerId = trainerId;
     }
 
-    public void setClassschedule(String schedule){
+    public void setClassSchedule(String schedule){
         this.schedule = schedule;
     }
 
     //toString
     @Override
     public String toString(){
-        return "Class name : " + className + " Description: " + description + " Trainer ID: " + trainerId + " Schedule: " + schedule ;
+        return "Class ID: " + id + ", Class name : " + className + ", Description: " + description + ", Trainer ID: " + trainerId + ", Schedule: " + schedule ;
     }
     
 }

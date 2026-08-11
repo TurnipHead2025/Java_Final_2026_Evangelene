@@ -3,8 +3,8 @@ package org.keyin;
 import java.sql.SQLException;
 import java.util.Scanner;
 
-import org.keyin.memberships.MembershipService;
 import org.keyin.memberships.Membership;
+import org.keyin.memberships.MembershipService;
 import org.keyin.user.User;
 import org.keyin.user.UserService;
 import org.keyin.workoutclasses.WorkoutClass;
@@ -79,7 +79,7 @@ public class GymApp {
                         break;
                     default:
 
-                        break;
+        break;
                 }
             } else {
                 System.out.println("Login Failed! Invalid credentials.");
@@ -166,7 +166,7 @@ public class GymApp {
         do { 
         System.out.println("\n=== Trainer Menu ===");
         System.out.println("1. Create Class");
-        System.out.println("2. Update Class (coming soon)");
+        System.out.println("2. Update Class");
         System.out.println("3. Delete Class");
         System.out.println("4. View My Classes");
         System.out.println("5. Purchase Membership");
@@ -198,10 +198,31 @@ public class GymApp {
             } catch (Exception e) {
                 System.out.println("Error adding class: " + e.getMessage());
             }           
-                break;
+            break;
 
             case 2: // update - coming soon
-                break;
+                try {
+                    System.out.print("Enter Class ID to update: ");
+                    int updateId = scanner.nextInt();
+                    scanner.nextLine();
+                    System.out.print("Enter the new class name: ");
+                    String newName = scanner.nextLine();
+                    System.out.print("Enter the new description: ");
+                    String newDescription = scanner.nextLine();
+                    System.out.print("Enter the new schedule: ");
+                    String newSchedule = scanner.nextLine();
+                    int rowsUpdated = workoutService.updateClass(newName, newDescription, newSchedule, updateId);
+                    if (rowsUpdated == 0) {
+                        System.out.println();
+                        System.out.println("No class found with that Id");
+                    }else {
+                        System.out.println();
+                        System.out.println("Class Updated Successfully!");
+                    }
+                } catch (SQLException e){
+                System.out.println("Error: " + e.getMessage());
+            }
+            break;   
             
             case 3: //delete class
                 System.out.print("Enter Class Id to delete: ");
@@ -219,7 +240,7 @@ public class GymApp {
                 } catch (SQLException e) {
                     System.out.println("Error: " + e.getMessage());
                 }    
-                break;
+            break;
             case 4: //view classes
                 try {
                     workoutService.getClassesByTrainerId(user.getId())
@@ -227,7 +248,7 @@ public class GymApp {
                 } catch (SQLException e) {
                     System.out.println("Error: " + e.getMessage());
                 } 
-                break; 
+            break; 
             case 5: //Add membership (purchase)  
                 try {
                     System.out.print("Enter the membership type (standard, aluminum, gold):");
@@ -246,13 +267,13 @@ public class GymApp {
                 } catch (SQLException e) {
                     System.out.println("Error: " + e.getMessage());
                 } 
-                break;  
+            break;  
             case 6:
                 System.out.print("View Merch Coming soon!");    
             case 7:
                 System.out.println();
                 System.out.println("Logging out...");
-                break;
+            break;
             default:
                 System.out.println("Invalid input. Please enter a valid number");
         }
@@ -274,7 +295,7 @@ private static void showAdminMenu(Scanner scanner, User user, UserService userSe
         System.out.println("6. View all classes");
         System.out.println("7. Create Workout Class");
         System.out.println("8. Delete Workout Class");
-        System.out.println("9. Update Workout Class (coming soon!");
+        System.out.println("9. Update Workout Class");
         System.out.println("10. Logout");
         System.out.print("Enter your choice: ");
 
@@ -293,7 +314,7 @@ private static void showAdminMenu(Scanner scanner, User user, UserService userSe
                 } catch (SQLException e) {
                     System.out.println("Error: " + e.getMessage());
                 }
-                break;
+            break;
             case 2: //delete user
                 System.out.print("Enter user Id to delete: ");
                 int id = scanner.nextInt();
@@ -311,7 +332,7 @@ private static void showAdminMenu(Scanner scanner, User user, UserService userSe
                 } catch (SQLException e) {
                     System.out.println("Error: " + e.getMessage());
                 }    
-                break;
+            break;
             case 3: //View total membership revenue
                 try {
                     System.out.println();
@@ -320,13 +341,13 @@ private static void showAdminMenu(Scanner scanner, User user, UserService userSe
                 } catch (SQLException e) {
                     System.out.println("Error: " + e.getMessage());
                 }
-                break;
+            break;
             case 4:
                 System.out.println("Add Merch - Coming Soon.");
-                break;
+            break;
             case 5:
                 System.out.println("View Merch - Coming Soon.");
-                break;
+            break;
             case 6: //View all classes 
                  try {
                     System.out.println();
@@ -334,7 +355,7 @@ private static void showAdminMenu(Scanner scanner, User user, UserService userSe
                 } catch (SQLException e) {
                     System.out.println("Error: " + e.getMessage());
                 }
-                break;
+            break;
             case 7: //create workout class 
                  try {
                 System.out.print("Enter the Class Name: ");
@@ -346,7 +367,6 @@ private static void showAdminMenu(Scanner scanner, User user, UserService userSe
                 System.out.print("Enter Trainer ID to assign this class to: ");
                 int trainerId = scanner.nextInt();
                 scanner.nextLine();
-                trainerId = user.getId();
 
                 WorkoutClass workoutClass = new WorkoutClass(classname, description, trainerId, schedule); 
                 workoutService.createClass(workoutClass);
@@ -354,7 +374,7 @@ private static void showAdminMenu(Scanner scanner, User user, UserService userSe
             } catch (Exception e) {
                 System.out.println("Error adding class: " + e.getMessage());
             }           
-                break;
+            break;
             case 8: //Delete Class
                 System.out.print("Enter Class Id to delete: ");
                 int classId = scanner.nextInt();
@@ -371,9 +391,30 @@ private static void showAdminMenu(Scanner scanner, User user, UserService userSe
                 } catch (SQLException e) {
                     System.out.println("Error: " + e.getMessage());
                 }    
-                break;
-            case 9: //update class
-                System.out.println("Coming soon");
+            break;
+            case 9: //update class by class Id
+                try {
+                    System.out.print("Enter Class ID to update: ");
+                    int updateId = scanner.nextInt();
+                    scanner.nextLine();
+                    System.out.print("Enter the new class name: ");
+                    String newName = scanner.nextLine();
+                    System.out.print("Enter the new description: ");
+                    String newDescription = scanner.nextLine();
+                    System.out.print("Enter the new schedule: ");
+                    String newSchedule = scanner.nextLine();
+                    int rowsUpdated = workoutService.updateClass(newName, newDescription, newSchedule, updateId);
+                    if (rowsUpdated == 0) {
+                        System.out.println();
+                        System.out.println("No class found with that Id");
+                    }else {
+                        System.out.println();
+                        System.out.println("Class Updated Successfully!");
+                    }
+               } catch (SQLException e){
+                System.out.println("Error: " + e.getMessage());
+               }
+            break;
             case 10:
                 System.out.println();
                 System.out.println("Logging out...");
