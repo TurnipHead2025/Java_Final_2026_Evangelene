@@ -29,7 +29,7 @@ public class WorkoutClassDAO {
         String sql = "SELECT * FROM workout_classes";
         try (Connection conn = DatabaseConnection.getConnection();
             PreparedStatement pstmt = conn.prepareStatement(sql);
-             ResultSet rs = pstmt.executeQuery()){
+            ResultSet rs = pstmt.executeQuery()){
                 while (rs.next()){
                     WorkoutClass workoutClass = new WorkoutClass(
                         rs.getString("class_name"),
