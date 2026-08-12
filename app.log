@@ -16,3 +16,5 @@ WARNING: Admin deleted user with ID: 5
 Aug 11, 2026 2:09:35 P.M. org.keyin.GymApp showAdminMenu
 WARNING: Database error: ERROR: insert or update on table "workout_classes" violates foreign key constraint "workout_classes_trainer_id_fkey"
   Detail: Key (trainer_id)=(1) is not present in table "users".
+Aug 12, 2026 6:18:24 A.M. org.keyin.GymApp main
+INFO: Gym Management System started.
