@@ -1,4 +1,3 @@
-//this is a fake change to the file and test the git commit and push functionality. Since I screwed it up with that damn video
 
 package org.keyin;
 import java.io.IOException;
